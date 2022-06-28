@@ -41,6 +41,12 @@ class Board:
                           triangle_17, triangle_18, triangle_19, triangle_20, triangle_21, triangle_22, triangle_23,
                           triangle_24]
 
+
+class BoardDrawer:
+    def __init__(self, triangles, bar):
+        self.triangles = triangles
+        self.bar = bar
+
     def generate_table(self):
         print('      13        14        15        16        17        18          19        20        21        22        23        24     ')
         print('=============================================================================================================================')
@@ -226,4 +232,5 @@ class Board:
 
 if __name__ == '__main__':
     board = Board()
-    board.generate_table()
+    boardDrawer = BoardDrawer(board.triangles, board.bar)
+    boardDrawer.generate_table()
