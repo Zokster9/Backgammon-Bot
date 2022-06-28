@@ -58,15 +58,12 @@ class Dice:
 
 
 class DiceDrawer:
-    def __init__(self, die1_value, die2_value):
-        self._die1_value = die1_value
-        self._die2_value = die2_value
-
-    def draw_dice(self):
+    @staticmethod
+    def draw_dice(die1, die2):
         print('Dice:')
-        print(DiceDrawer.draw_die(self._die1_value))
+        print(DiceDrawer.draw_die(die1))
         print()
-        print(DiceDrawer.draw_die(self._die2_value))
+        print(DiceDrawer.draw_die(die2))
 
     @staticmethod
     def draw_die(value):
