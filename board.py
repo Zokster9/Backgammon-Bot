@@ -1,12 +1,10 @@
-from colorama import init, Fore, Back, Style
-
-init(autoreset=True)
+from figures import BlackFigure, WhiteFigure
 
 
 class Board:
     def __init__(self):
-        self.black = Style.BRIGHT + Back.BLACK + Fore.WHITE + "O" + Style.RESET_ALL
-        self.white = Style.BRIGHT + Back.WHITE + Fore.BLACK + "O" + Style.RESET_ALL
+        self.black = BlackFigure.figure()
+        self.white = WhiteFigure.figure()
         triangle_1 = [self.black, self.black]
         triangle_2 = list()
         triangle_3 = list()
