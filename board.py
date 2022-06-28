@@ -94,7 +94,7 @@ class Board:
             if i != last_triangle:
                 row += ' '
         row += self.fill_bar_spot(bar_index)
-        for i in range(first_triangle + 6 * step, last_triangle + 6 * step  + step, step):
+        for i in range(first_triangle + 6 * step, last_triangle + 6 * step + step, step):
             if len(self.triangles[i]) == 0:
                 row += '.........'
             else:
@@ -201,8 +201,9 @@ class Board:
         return row
 
     def print_extra_rows(self, bar_index):
-        for i in range(1, 6):
-            j = 6 - i
+        n = 10
+        for i in range(1, n):
+            j = n - i
             upper_triangles_idx = 12
             lower_triangles_idx = 11
             spot_1 = self.fill_extra_spots(i, j, lower_triangles_idx, upper_triangles_idx)
