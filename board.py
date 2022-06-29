@@ -1,10 +1,10 @@
-from figures import BlackFigure, WhiteFigure
+from figures import Figures
 
 
 class Board:
     def __init__(self):
-        self.black = BlackFigure.figure()
-        self.white = WhiteFigure.figure()
+        self.black = Figures.black_figure()
+        self.white = Figures.black_figure()
         triangle_1 = [self.black, self.black]
         triangle_2 = list()
         triangle_3 = list()
@@ -41,90 +41,91 @@ class Board:
 
 
 class BoardDrawer:
-    def __init__(self, triangles, bar):
-        self.triangles = triangles
-        self.bar = bar
-
-    def generate_table(self):
+    @staticmethod
+    def generate_table(triangles, bar):
         print('      13        14        15        16        17        18          19        20        21        22        23        24     ')
         print('=============================================================================================================================')
         bar_index = 0
-        print(self.fill_first_triangle_row(12, 17, 1, bar_index))
+        print(BoardDrawer.fill_first_triangle_row(triangles, 12, 17, 1, bar, bar_index))
         bar_index += 1
-        print(self.fill_second_triangle_row(12, 17, 1, bar_index))
+        print(BoardDrawer.fill_second_triangle_row(triangles, 12, 17, 1, bar, bar_index))
         bar_index += 1
-        print(self.fill_third_triangle_row(12, 17, 1, bar_index))
+        print(BoardDrawer.fill_third_triangle_row(triangles, 12, 17, 1, bar, bar_index))
         bar_index += 1
-        print(self.fill_fourth_triangle_row(12, 17, 1, bar_index))
+        print(BoardDrawer.fill_fourth_triangle_row(triangles, 12, 17, 1, bar, bar_index))
         bar_index += 1
-        print(self.fill_fifth_triangle_row(12, 17, 1, bar_index))
+        print(BoardDrawer.fill_fifth_triangle_row(triangles, 12, 17, 1, bar, bar_index))
         bar_index += 1
-        self.print_extra_rows(bar_index)
+        BoardDrawer.print_extra_rows(triangles, bar, bar_index)
         bar_index += 5
-        print(self.fill_fifth_triangle_row(11, 6, -1, bar_index))
+        print(BoardDrawer.fill_fifth_triangle_row(triangles, 11, 6, -1, bar, bar_index))
         bar_index += 1
-        print(self.fill_fourth_triangle_row(11, 6, -1, bar_index))
+        print(BoardDrawer.fill_fourth_triangle_row(triangles, 11, 6, -1, bar, bar_index))
         bar_index += 1
-        print(self.fill_third_triangle_row(11, 6, -1, bar_index))
+        print(BoardDrawer.fill_third_triangle_row(triangles, 11, 6, -1, bar, bar_index))
         bar_index += 1
-        print(self.fill_second_triangle_row(11, 6, -1, bar_index))
+        print(BoardDrawer.fill_second_triangle_row(triangles, 11, 6, -1, bar, bar_index))
         bar_index += 1
-        print(self.fill_first_triangle_row(11, 6, -1, bar_index))
+        print(BoardDrawer.fill_first_triangle_row(triangles, 11, 6, -1, bar, bar_index))
         bar_index += 1
         print('=============================================================================================================================')
         print('      12        11        10        09        08        07          06        05        04        03        02        01    ')
 
-    def fill_extra_spots(self, i, j, lower_triangles_idx, upper_triangles_idx):
+    @staticmethod
+    def fill_extra_spots(triangles, i, j, lower_triangles_idx, upper_triangles_idx):
         spot = ' '
-        if len(self.triangles[upper_triangles_idx]) == (5 + i):
-            spot = self.triangles[upper_triangles_idx][5 + i - 1]
-        elif len(self.triangles[lower_triangles_idx]) == (5 + j):
-            spot = self.triangles[lower_triangles_idx][5 + j - 1]
+        if len(triangles[upper_triangles_idx]) == (5 + i):
+            spot = triangles[upper_triangles_idx][5 + i - 1]
+        elif len(triangles[lower_triangles_idx]) == (5 + j):
+            spot = triangles[lower_triangles_idx][5 + j - 1]
         return spot
 
-    def fill_bar_spot(self, i):
+    @staticmethod
+    def fill_bar_spot(bar, i):
         bar_spot = ' '
-        if len(self.bar) >= (i + 1):
-            bar_spot = self.bar[i]
+        if len(bar) >= (i + 1):
+            bar_spot = bar[i]
         return f'|{bar_spot}|'
 
-    def fill_first_triangle_row(self, first_triangle, last_triangle, step, bar_index):
+    @staticmethod
+    def fill_first_triangle_row(triangles, first_triangle, last_triangle, step, bar, bar_index):
         row = '||'
         for i in range(first_triangle, last_triangle + step, step):
-            if len(self.triangles[i]) == 0:
+            if len(triangles[i]) == 0:
                 row += '.........'
             else:
-                row += f'....{self.triangles[i][0]}....'
+                row += f'....{triangles[i][0]}....'
             if i != last_triangle:
                 row += ' '
-        row += self.fill_bar_spot(bar_index)
+        row += BoardDrawer.fill_bar_spot(bar, bar_index)
         for i in range(first_triangle + 6 * step, last_triangle + 6 * step + step, step):
-            if len(self.triangles[i]) == 0:
+            if len(triangles[i]) == 0:
                 row += '.........'
             else:
-                row += f'....{self.triangles[i][0]}....'
+                row += f'....{triangles[i][0]}....'
             if i != last_triangle + 6 * step:
                 row += ' '
         row += '||'
         return row
 
-    def fill_second_triangle_row(self, first_triangle, last_triangle, step, bar_index):
+    @staticmethod
+    def fill_second_triangle_row(triangles, first_triangle, last_triangle, step, bar, bar_index):
         row = '|| '
         for i in range(first_triangle, last_triangle + step, step):
-            if len(self.triangles[i]) < 2:
+            if len(triangles[i]) < 2:
                 row += '.......'
             else:
-                row += f'...{self.triangles[i][1]}...'
+                row += f'...{triangles[i][1]}...'
             if i != last_triangle:
                 row += '   '
             else:
                 row += ' '
-        row += self.fill_bar_spot(bar_index) + ' '
+        row += BoardDrawer.fill_bar_spot(bar, bar_index) + ' '
         for i in range(first_triangle + 6 * step, last_triangle + 6 * step + step, step):
-            if len(self.triangles[i]) < 2:
+            if len(triangles[i]) < 2:
                 row += '.......'
             else:
-                row += f'...{self.triangles[i][1]}...'
+                row += f'...{triangles[i][1]}...'
             if i != last_triangle + 6 * step:
                 row += '   '
             else:
@@ -132,23 +133,24 @@ class BoardDrawer:
         row += '||'
         return row
 
-    def fill_third_triangle_row(self, first_triangle, last_triangle, step, bar_index):
+    @staticmethod
+    def fill_third_triangle_row(triangles, first_triangle, last_triangle, step, bar, bar_index):
         row = '||  '
         for i in range(first_triangle, last_triangle + step, step):
-            if len(self.triangles[i]) < 3:
+            if len(triangles[i]) < 3:
                 row += '.....'
             else:
-                row += f'..{self.triangles[i][2]}..'
+                row += f'..{triangles[i][2]}..'
             if i != last_triangle:
                 row += '     '
             else:
                 row += '  '
-        row += self.fill_bar_spot(bar_index) + '  '
+        row += BoardDrawer.fill_bar_spot(bar, bar_index) + '  '
         for i in range(first_triangle + 6 * step, last_triangle + 6 * step + step, step):
-            if len(self.triangles[i]) < 3:
+            if len(triangles[i]) < 3:
                 row += '.....'
             else:
-                row += f'..{self.triangles[i][2]}..'
+                row += f'..{triangles[i][2]}..'
             if i != last_triangle + 6 * step:
                 row += '     '
             else:
@@ -156,23 +158,24 @@ class BoardDrawer:
         row += '||'
         return row
 
-    def fill_fourth_triangle_row(self, first_triangle, last_triangle, step, bar_index):
+    @staticmethod
+    def fill_fourth_triangle_row(triangles, first_triangle, last_triangle, step, bar, bar_index):
         row = '||   '
         for i in range(first_triangle, last_triangle + step, step):
-            if len(self.triangles[i]) < 4:
+            if len(triangles[i]) < 4:
                 row += '...'
             else:
-                row += f'.{self.triangles[i][3]}.'
+                row += f'.{triangles[i][3]}.'
             if i != last_triangle:
                 row += '       '
             else:
                 row += '   '
-        row += self.fill_bar_spot(bar_index) + '   '
+        row += BoardDrawer.fill_bar_spot(bar, bar_index) + '   '
         for i in range(first_triangle + 6 * step, last_triangle + 6 * step + step, step):
-            if len(self.triangles[i]) < 4:
+            if len(triangles[i]) < 4:
                 row += '...'
             else:
-                row += f'.{self.triangles[i][3]}.'
+                row += f'.{triangles[i][3]}.'
             if i != last_triangle + 6 * step:
                 row += '       '
             else:
@@ -180,23 +183,24 @@ class BoardDrawer:
         row += '||'
         return row
 
-    def fill_fifth_triangle_row(self, first_triangle, last_triangle, step, bar_index):
+    @staticmethod
+    def fill_fifth_triangle_row(triangles, first_triangle, last_triangle, step, bar, bar_index):
         row = '||    '
         for i in range(first_triangle, last_triangle + step, step):
-            if len(self.triangles[i]) < 5:
+            if len(triangles[i]) < 5:
                 row += '.'
             else:
-                row += f'{self.triangles[i][4]}'
+                row += f'{triangles[i][4]}'
             if i != last_triangle:
                 row += '         '
             else:
                 row += '    '
-        row += self.fill_bar_spot(bar_index) + '    '
+        row += BoardDrawer.fill_bar_spot(bar, bar_index) + '    '
         for i in range(first_triangle + 6 * step, last_triangle + 6 * step + step, step):
-            if len(self.triangles[i]) < 5:
+            if len(triangles[i]) < 5:
                 row += '.'
             else:
-                row += f'{self.triangles[i][4]}'
+                row += f'{triangles[i][4]}'
             if i != last_triangle + 6 * step:
                 row += '         '
             else:
@@ -204,31 +208,31 @@ class BoardDrawer:
         row += '||'
         return row
 
-    def print_extra_rows(self, bar_index):
+    @staticmethod
+    def print_extra_rows(triangles, bar, bar_index):
         n = 10
         for i in range(1, n):
             j = n - i
             upper_triangles_idx = 12
             lower_triangles_idx = 11
-            spot_1 = self.fill_extra_spots(i, j, lower_triangles_idx, upper_triangles_idx)
-            spot_2 = self.fill_extra_spots(i, j, lower_triangles_idx - 1, upper_triangles_idx + 1)
-            spot_3 = self.fill_extra_spots(i, j, lower_triangles_idx - 2, upper_triangles_idx + 2)
-            spot_4 = self.fill_extra_spots(i, j, lower_triangles_idx - 3, upper_triangles_idx + 3)
-            spot_5 = self.fill_extra_spots(i, j, lower_triangles_idx - 4, upper_triangles_idx + 4)
-            spot_6 = self.fill_extra_spots(i, j, lower_triangles_idx - 5, upper_triangles_idx + 5)
-            spot_7 = self.fill_extra_spots(i, j, lower_triangles_idx - 6, upper_triangles_idx + 6)
-            spot_8 = self.fill_extra_spots(i, j, lower_triangles_idx - 7, upper_triangles_idx + 7)
-            spot_9 = self.fill_extra_spots(i, j, lower_triangles_idx - 8, upper_triangles_idx + 8)
-            spot_10 = self.fill_extra_spots(i, j, lower_triangles_idx - 9, upper_triangles_idx + 9)
-            spot_11 = self.fill_extra_spots(i, j, lower_triangles_idx - 10, upper_triangles_idx + 10)
-            spot_12 = self.fill_extra_spots(i, j, lower_triangles_idx - 11, upper_triangles_idx + 11)
+            spot_1 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx, upper_triangles_idx)
+            spot_2 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 1, upper_triangles_idx + 1)
+            spot_3 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 2, upper_triangles_idx + 2)
+            spot_4 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 3, upper_triangles_idx + 3)
+            spot_5 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 4, upper_triangles_idx + 4)
+            spot_6 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 5, upper_triangles_idx + 5)
+            spot_7 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 6, upper_triangles_idx + 6)
+            spot_8 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 7, upper_triangles_idx + 7)
+            spot_9 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 8, upper_triangles_idx + 8)
+            spot_10 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 9, upper_triangles_idx + 9)
+            spot_11 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 10, upper_triangles_idx + 10)
+            spot_12 = BoardDrawer.fill_extra_spots(triangles, i, j, lower_triangles_idx - 11, upper_triangles_idx + 11)
             row = f'||    {spot_1}         {spot_2}         {spot_3}         {spot_4}         {spot_5}         {spot_6}    ' \
-                  + self.fill_bar_spot(bar_index) + f'    {spot_7}         {spot_8}         {spot_9}         {spot_10}         {spot_11}         {spot_12}    ||'
+                  + BoardDrawer.fill_bar_spot(bar, bar_index) + f'    {spot_7}         {spot_8}         {spot_9}         {spot_10}         {spot_11}         {spot_12}    ||'
             print(row)
             bar_index += 1
 
 
 if __name__ == '__main__':
     board = Board()
-    boardDrawer = BoardDrawer(board.triangles, board.bar)
-    boardDrawer.generate_table()
+    BoardDrawer.generate_table(board.triangles, board.bar)

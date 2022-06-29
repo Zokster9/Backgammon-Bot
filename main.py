@@ -22,8 +22,7 @@ def player_input(game_board: Board, game_dice: Dice):
 def game(game_board: Board, game_dice: Dice, player_goes_next):
     game_over = False
     while not game_over:
-        board_drawer = BoardDrawer(game_board.triangles, game_board.bar)
-        board_drawer.generate_table()
+        BoardDrawer.generate_table(game_board.triangles, game_board.bar)
         DiceDrawer.draw_dice(game_dice.die1, game_dice.die2)
         print()
         if player_goes_next:
