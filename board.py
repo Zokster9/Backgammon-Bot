@@ -33,7 +33,7 @@ class Board:
         self.num_of_black = 15
         self.white_home_board = [triangle_1, triangle_2, triangle_3, triangle_4, triangle_5, triangle_6]
         self.black_home_board = [triangle_19, triangle_20, triangle_21, triangle_22, triangle_23, triangle_24]
-        self.bar = []
+        self.bar = [self.black]
         self.triangles = [triangle_1, triangle_2, triangle_3, triangle_4, triangle_5, triangle_6, triangle_7,
                           triangle_8,
                           triangle_9, triangle_10, triangle_11, triangle_12, triangle_13, triangle_14, triangle_15,
@@ -233,8 +233,3 @@ class BoardDrawer:
                   + BoardDrawer.fill_bar_spot(bar, bar_index) + f'    {spot_7}         {spot_8}         {spot_9}         {spot_10}         {spot_11}         {spot_12}    ||'
             print(row)
             bar_index += 1
-
-
-if __name__ == '__main__':
-    board = Board()
-    BoardDrawer.generate_table(board.triangles, board.bar)

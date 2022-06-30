@@ -146,7 +146,7 @@ class Moves:
             for die in list(moves.keys()):
                 if die == die1:
                     move = moves[die]
-                    simulate_move(game_board, move)
+                    simulate_move(game_board, move, player_figure)
                     if game_board.bar.count(player_figure) > 0:
                         generate_bar_move(game_board, die, self.moves, player_figure)
                     else:
@@ -217,6 +217,7 @@ class Moves:
                     for move in list(self.moves):
                         if move.keys()[0] != dice.die2:
                             self.moves.remove(move)
+        self.one_die_moves = list()
 
     def generate_equal_dice_moves(self, game_board, dice, player_figure):
         size = len(self.moves)
@@ -243,7 +244,7 @@ class Moves:
                 self.moves.remove(moves)
                 current_moves = deepcopy(moves)
                 for key, move in list(moves.items()):
-                    simulate_move(game_board, move)
+                    simulate_move(game_board, move, player_figure)
                 n, m, step = set_for_loop(player_figure)
                 if game_board.bar.count(player_figure) > 0:
                     generate_equal_dice_bar_move(game_board, die, moves, new_moves, player_figure, self.equal_die_valid_counter)
