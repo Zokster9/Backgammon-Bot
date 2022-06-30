@@ -42,11 +42,11 @@ class Dice:
 
     @property
     def die1(self):
-        return 6
+        return self._die1.value
 
     @property
     def die2(self):
-        return 6
+        return self._die2.value
 
     @die1.setter
     def die1(self, value):

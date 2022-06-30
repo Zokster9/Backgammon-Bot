@@ -30,7 +30,7 @@ def game(game_board: Board, game_dice: Dice, player_goes_next):
     moves = Moves()
     print()
     moves.generate_moves(game_board, game_dice, Figures.white_figure())
-    pprint.pprint(moves.moves)
+    print(moves.moves)
 
 
 if __name__ == '__main__':
@@ -46,16 +46,15 @@ if __name__ == '__main__':
         print(DiceDrawer.draw_die(dice.die1))
         print('Bots die:')
         print(DiceDrawer.draw_die(dice.die2))
-        # if dice.die1 == dice.die2:
-        #     print('It\'s a tie, so you have to roll again.')
-        # elif dice.die1 > dice.die2:
-        #     print('Your die is greater so you start the game.')
-        #     players_turn = True
-        #     break
-        # elif dice.die1 < dice.die2:
-        #     print('Bots die is greater so it starts the game.')
-        #     break
-        break
+        if dice.die1 == dice.die2:
+            print('It\'s a tie, so you have to roll again.')
+        elif dice.die1 > dice.die2:
+            print('Your die is greater so you start the game.')
+            players_turn = True
+            break
+        elif dice.die1 < dice.die2:
+            print('Bots die is greater so it starts the game.')
+            break
     input('Press Enter to start the game...')
     print()
     game(board, dice, players_turn)
