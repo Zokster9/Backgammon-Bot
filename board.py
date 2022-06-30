@@ -4,7 +4,7 @@ from figures import Figures
 class Board:
     def __init__(self):
         self.black = Figures.black_figure()
-        self.white = Figures.black_figure()
+        self.white = Figures.white_figure()
         triangle_1 = [self.black, self.black]
         triangle_2 = list()
         triangle_3 = list()
@@ -29,6 +29,8 @@ class Board:
         triangle_22 = list()
         triangle_23 = list()
         triangle_24 = [self.white, self.white]
+        self.num_of_white = 15
+        self.num_of_black = 15
         self.white_home_board = [triangle_1, triangle_2, triangle_3, triangle_4, triangle_5, triangle_6]
         self.black_home_board = [triangle_19, triangle_20, triangle_21, triangle_22, triangle_23, triangle_24]
         self.bar = []
