@@ -62,37 +62,71 @@ def player_input(game_board: Board, game_dice: Dice, valid_moves: Moves):
     if figures_on_bar(game_board, Figures.white_figure()):
         print()
     else:
+        made_moves = list()
+        num_made_moves = 0
         if game_dice.die1 != game_dice.die2:
-            die = player_enter_die_value(game_dice)
-            triangle_1 = player_enter_triangle_num(game_board)
-            if die == game_dice.die1:
-                player_make_a_move(game_dice.die1, game_board, triangle_1, valid_moves)
-            else:
-                player_make_a_move(game_dice.die2, game_board, triangle_1, valid_moves)
+            while True:
+                die = player_enter_die_value(game_dice)
+                triangle_1 = player_enter_triangle_num(game_board)
+                if die == game_dice.die1:
+                    player_make_a_move(game_dice.die1, game_board, triangle_1, valid_moves, made_moves)
+                else:
+                    player_make_a_move(game_dice.die2, game_board, triangle_1, valid_moves, made_moves)
+                if len(made_moves) == num_made_moves:
+                    print('Invalid move! Try again')
+                else:
+                    break
+            num_made_moves = len(made_moves)
             BoardDrawer.generate_table(game_board.triangles, game_board.bar)
             print()
-            triangle_2 = player_enter_triangle_num(game_board, 'second')
-            if die == game_dice.die1:
-                player_make_a_move(game_dice.die2, game_board, triangle_2, valid_moves)
-            else:
-                player_make_a_move(game_dice.die1, game_board, triangle_2, valid_moves)
+            while True:
+                triangle_2 = player_enter_triangle_num(game_board, 'second')
+                if die == game_dice.die1:
+                    player_make_a_move(game_dice.die2, game_board, triangle_2, valid_moves, made_moves)
+                else:
+                    player_make_a_move(game_dice.die1, game_board, triangle_2, valid_moves, made_moves)
+                if len(made_moves) == num_made_moves:
+                    print('Invalid move! Try again')
+                else:
+                    break
         else:
             num_of_moves = valid_moves.equal_die_valid_counter
             print(f"You will have {num_of_moves} moves to do with these dice!!")
             for i in range(0, num_of_moves):
-                triangle = player_enter_triangle_num(game_board, get_ordinal_for_num(i + 1))
-                player_make_a_move(game_dice.die1 + i, game_board, triangle, valid_moves)
+                while True:
+                    triangle = player_enter_triangle_num(game_board, get_ordinal_for_num(i + 1))
+                    player_make_a_move(game_dice.die1 + i, game_board, triangle, valid_moves, made_moves)
+                    if len(made_moves) == num_made_moves:
+                        print('Invalid move! Try again')
+                    else:
+                        break
+                num_made_moves = len(made_moves)
                 BoardDrawer.generate_table(game_board.triangles, game_board.bar)
                 print()
 
 
-def player_make_a_move(die, game_board, triangle, valid_moves):
+def player_make_a_move(die, game_board, triangle, valid_moves, made_moves):
+    moves_made_before = len(made_moves)
+    move_made = False
+    i = 0
     for moves in valid_moves.moves:
-        move = moves.get(die, None)
-        if move is not None:
-            if move[0] == triangle - 1:
-                move_checker(game_board, move)
-                break
+        for key, move in moves.items():
+            if moves_made_before == i:
+                if key == die:
+                    if move[0] == triangle - 1:
+                        made_moves.append({key: move[0]})
+                        move_checker(game_board, move)
+                        move_made = True
+                        break
+            else:
+                made_move_key, made_move_source = list(made_moves[i].items())[0]
+                if made_move_key == key and made_move_source == move[0]:
+                    i += 1
+                    continue
+                else:
+                    break
+        if move_made:
+            break
 
 
 def move_checker(game_board, move):
