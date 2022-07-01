@@ -58,20 +58,68 @@ def player_enter_triangle_num(game_board, num='first'):
             continue
 
 
+def both_die_valid_input(game_board, game_dice, valid_moves, made_moves, num_made_moves):
+    while True:
+        die = player_enter_die_value(game_dice)
+        triangle_1 = player_enter_triangle_num(game_board)
+        if die == game_dice.die1:
+            player_make_a_move(game_dice.die1, game_board, triangle_1, valid_moves, made_moves)
+        else:
+            player_make_a_move(game_dice.die2, game_board, triangle_1, valid_moves, made_moves)
+        if len(made_moves) == num_made_moves:
+            print('Invalid move! Try again')
+        else:
+            break
+    num_made_moves = len(made_moves)
+    BoardDrawer.generate_table(game_board.triangles, game_board.bar)
+    print()
+    while True:
+        triangle_2 = player_enter_triangle_num(game_board, 'second')
+        if die == game_dice.die1:
+            player_make_a_move(game_dice.die2, game_board, triangle_2, valid_moves, made_moves)
+        else:
+            player_make_a_move(game_dice.die1, game_board, triangle_2, valid_moves, made_moves)
+        if len(made_moves) == num_made_moves:
+            print('Invalid move! Try again')
+        else:
+            break
+
+
+def one_die_input(game_board, die, valid_moves, made_moves, num_made_moves):
+    print(f'You can only play the die with the value of {die}.')
+    while True:
+        triangle = player_enter_triangle_num(game_board)
+        player_make_a_move(die, game_board, triangle, valid_moves, made_moves)
+        if len(made_moves) == num_made_moves:
+            print('Invalid move! Try again')
+        else:
+            break
+    BoardDrawer.generate_table(game_board.triangles, game_board.bar)
+    print()
+
+
 def player_input(game_board: Board, game_dice: Dice, valid_moves: Moves):
-    if figures_on_bar(game_board, Figures.white_figure()):
-        print()
+    made_moves = list()
+    num_made_moves = 0
+    if game_dice.die1 != game_dice.die2:
+        if valid_moves.both_die_valid:
+            both_die_valid_input(game_board, game_dice, valid_moves, made_moves, num_made_moves)
+        elif valid_moves.die1_valid and valid_moves.die2_valid:
+            if game_dice.die1 > game_dice.die2:
+                one_die_input(game_board, game_dice.die1, valid_moves, made_moves, num_made_moves)
+            else:
+                one_die_input(game_board, game_dice.die2, valid_moves, made_moves, num_made_moves)
+        elif valid_moves.die1_valid:
+            one_die_input(game_board, game_dice.die1, valid_moves, made_moves, num_made_moves)
+        elif valid_moves.die2_valid:
+            one_die_input(game_board, game_dice.die2, valid_moves, made_moves, num_made_moves)
     else:
-        made_moves = list()
-        num_made_moves = 0
-        if game_dice.die1 != game_dice.die2:
+        num_of_moves = valid_moves.equal_die_valid_counter
+        print(f"You will have {num_of_moves} moves to do with these dice!!")
+        for i in range(0, num_of_moves):
             while True:
-                die = player_enter_die_value(game_dice)
-                triangle_1 = player_enter_triangle_num(game_board)
-                if die == game_dice.die1:
-                    player_make_a_move(game_dice.die1, game_board, triangle_1, valid_moves, made_moves)
-                else:
-                    player_make_a_move(game_dice.die2, game_board, triangle_1, valid_moves, made_moves)
+                triangle = player_enter_triangle_num(game_board, get_ordinal_for_num(i + 1))
+                player_make_a_move(game_dice.die1 + i, game_board, triangle, valid_moves, made_moves)
                 if len(made_moves) == num_made_moves:
                     print('Invalid move! Try again')
                 else:
@@ -79,30 +127,6 @@ def player_input(game_board: Board, game_dice: Dice, valid_moves: Moves):
             num_made_moves = len(made_moves)
             BoardDrawer.generate_table(game_board.triangles, game_board.bar)
             print()
-            while True:
-                triangle_2 = player_enter_triangle_num(game_board, 'second')
-                if die == game_dice.die1:
-                    player_make_a_move(game_dice.die2, game_board, triangle_2, valid_moves, made_moves)
-                else:
-                    player_make_a_move(game_dice.die1, game_board, triangle_2, valid_moves, made_moves)
-                if len(made_moves) == num_made_moves:
-                    print('Invalid move! Try again')
-                else:
-                    break
-        else:
-            num_of_moves = valid_moves.equal_die_valid_counter
-            print(f"You will have {num_of_moves} moves to do with these dice!!")
-            for i in range(0, num_of_moves):
-                while True:
-                    triangle = player_enter_triangle_num(game_board, get_ordinal_for_num(i + 1))
-                    player_make_a_move(game_dice.die1 + i, game_board, triangle, valid_moves, made_moves)
-                    if len(made_moves) == num_made_moves:
-                        print('Invalid move! Try again')
-                    else:
-                        break
-                num_made_moves = len(made_moves)
-                BoardDrawer.generate_table(game_board.triangles, game_board.bar)
-                print()
 
 
 def player_make_a_move(die, game_board, triangle, valid_moves, made_moves):
