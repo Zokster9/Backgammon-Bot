@@ -148,7 +148,7 @@ class Moves:
                     move = moves[die]
                     simulate_move(game_board, move, player_figure)
                     if game_board.bar.count(player_figure) > 0:
-                        generate_bar_move(game_board, die, self.moves, player_figure)
+                        generate_bar_move(game_board, die2, self.moves, player_figure)
                     else:
                         for i in range(n, m, step):
                             if len(game_board.triangles[i]) == 0:
