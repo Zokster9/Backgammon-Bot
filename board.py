@@ -33,7 +33,7 @@ class Board:
         self.num_of_black = 15
         self.white_home_board = [triangle_1, triangle_2, triangle_3, triangle_4, triangle_5, triangle_6]
         self.black_home_board = [triangle_19, triangle_20, triangle_21, triangle_22, triangle_23, triangle_24]
-        self.bar = [self.black]
+        self.bar = []
         self.triangles = [triangle_1, triangle_2, triangle_3, triangle_4, triangle_5, triangle_6, triangle_7,
                           triangle_8,
                           triangle_9, triangle_10, triangle_11, triangle_12, triangle_13, triangle_14, triangle_15,
@@ -76,9 +76,9 @@ class BoardDrawer:
     @staticmethod
     def fill_extra_spots(triangles, i, j, lower_triangles_idx, upper_triangles_idx):
         spot = ' '
-        if len(triangles[upper_triangles_idx]) == (5 + i):
+        if len(triangles[upper_triangles_idx]) >= (5 + i):
             spot = triangles[upper_triangles_idx][5 + i - 1]
-        elif len(triangles[lower_triangles_idx]) == (5 + j):
+        elif len(triangles[lower_triangles_idx]) >= (5 + j):
             spot = triangles[lower_triangles_idx][5 + j - 1]
         return spot
 
