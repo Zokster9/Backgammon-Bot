@@ -148,7 +148,11 @@ class Moves:
                     move = moves[die]
                     simulate_move(game_board, move, player_figure)
                     if game_board.bar.count(player_figure) > 0:
-                        generate_bar_move(game_board, die2, self.moves, player_figure)
+                        new_move = []
+                        generate_bar_move(game_board, die2, new_move, player_figure)
+                        if len(new_move) != 0:
+                            key, item = list(new_move[0].items())[0]
+                            self.moves.append({die1: [move[0], move[1], move[2]], key: [item[0], item[1], item[2]]})
                     else:
                         for i in range(n, m, step):
                             if len(game_board.triangles[i]) == 0:
@@ -226,7 +230,7 @@ class Moves:
             if len(self.moves) == 0:
                 break
             else:
-                if len(self.moves) > size:
+                if len(self.moves) > size or len(self.moves[0].keys()) > size:
                     self.equal_die_valid_counter += 1
                     size = len(self.moves)
                 else:

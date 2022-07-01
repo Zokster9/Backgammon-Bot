@@ -1,8 +1,11 @@
 from random import randint
+
+from expectiminimax import expectiminimax
 from board import Board, BoardDrawer
 from dice import Dice, Die, DiceDrawer
 from figures import Figures
 from moves import Moves
+from timeit import default_timer as timer
 import pprint
 
 
@@ -196,12 +199,12 @@ def player_make_a_move(die, game_board, triangle, valid_moves, made_moves):
                     if move[0] == 'bar':
                         if move[1] == triangle:
                             made_moves.append({key: move[0]})
-                            move_checker(game_board, move)
+                            move_checker(game_board, move, Figures.white_figure())
                             move_made = True
                             break
                     elif move[0] == triangle - 1:
                         made_moves.append({key: move[0]})
-                        move_checker(game_board, move)
+                        move_checker(game_board, move, Figures.white_figure())
                         move_made = True
                         break
             else:
@@ -215,10 +218,10 @@ def player_make_a_move(die, game_board, triangle, valid_moves, made_moves):
             break
 
 
-def move_checker(game_board, move):
+def move_checker(game_board, move, figure):
     if move[0] == 'bar':
-        game_board.bar.remove(Figures.white_figure())
-        checker = Figures.white_figure()
+        game_board.bar.remove(figure)
+        checker = figure
     else:
         checker = game_board.triangles[move[0]].pop()
     if move[2]:
@@ -238,7 +241,20 @@ def random_bot_makes_a_move(game_board: Board, valid_moves: Moves):
                 game_board.bar.append(bar_checker)
             game_board.triangles[move[1]].append(Figures.black_figure())
         else:
-            move_checker(game_board, move)
+            move_checker(game_board, move, Figures.black_figure())
+
+
+def expectiminimax_bot_makes_move(game_board: Board, valid_moves: Moves, index):
+    moves = valid_moves.moves[index]
+    for key, move in moves.items():
+        if move[0] == 'bar':
+            game_board.bar.remove(Figures.black_figure())
+            if move[2]:
+                bar_checker = game_board.triangles[move[1]].pop()
+                game_board.bar.append(bar_checker)
+            game_board.triangles[move[1]].append(Figures.black_figure())
+        else:
+            move_checker(game_board, move, Figures.black_figure())
 
 
 def get_player_figure(player_goes_next):
@@ -260,7 +276,11 @@ def game(game_board: Board, game_dice: Dice, player_goes_next):
                 player_input(game_board, game_dice, moves)
                 player_goes_next = False
             else:
-                random_bot_makes_a_move(game_board, moves)
+                # random_bot_makes_a_move(game_board, moves)
+                start_time = timer()
+                index = expectiminimax(game_board, 'MAX', 3, True, valid_moves=moves, first_time=True)
+                print(timer() - start_time)
+                expectiminimax_bot_makes_move(game_board, moves, index)
                 player_goes_next = True
         else:
             if player_goes_next:

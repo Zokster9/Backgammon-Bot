@@ -41,6 +41,46 @@ class Board:
                           triangle_17, triangle_18, triangle_19, triangle_20, triangle_21, triangle_22, triangle_23,
                           triangle_24]
 
+    def get_num_black_checkers_on_home_board(self):
+        num = 0
+        for triangle in self.black_home_board:
+            num += triangle.count(self.black)
+        return num
+
+    def get_num_white_checkers_on_home_board(self):
+        num = 0
+        for triangle in self.white_home_board:
+            num += triangle.count(self.white)
+        return num
+
+    def get_num_black_points(self):
+        num = 0
+        for triangle in self.triangles:
+            if triangle.count(self.black) > 1:
+                num += 1
+        return num
+
+    def get_num_white_points(self):
+        num = 0
+        for triangle in self.triangles:
+            if triangle.count(self.white) > 1:
+                num += 1
+        return num
+
+    def get_num_black_bloats(self):
+        num = 0
+        for triangle in self.triangles:
+            if triangle.count(self.black) == 1:
+                num += 1
+        return num
+
+    def get_num_white_bloats(self):
+        num = 0
+        for triangle in self.triangles:
+            if triangle.count(self.white) == 1:
+                num += 1
+        return num
+
 
 class BoardDrawer:
     @staticmethod
