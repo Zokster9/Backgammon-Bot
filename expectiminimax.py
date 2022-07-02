@@ -39,13 +39,20 @@ def weighted_result(made_moves, game_dice):
         return sum(made_moves) * (1 / 36)
 
 
+def get_player_figure(maximizing_player):
+    if maximizing_player:
+        return Figures.black_figure()
+    else:
+        return Figures.white_figure()
+
+
 def heuristic_value(game_board):
     difference_num_checkers = game_board.num_of_white - game_board.num_of_black
     difference_num_bar_checkers = game_board.bar.count(Figures.white_figure()) - game_board.bar.count(Figures.black_figure())
     difference_num_checkers_home_board = game_board.get_num_black_checkers_on_home_board() - game_board.get_num_white_checkers_on_home_board()
     difference_num_of_points = game_board.get_num_black_points() - game_board.get_num_white_points()
     difference_num_of_blots = game_board.get_num_white_bloats() - game_board.get_num_black_bloats()
-    return 8 * difference_num_checkers + 5 * difference_num_bar_checkers + 5 * difference_num_checkers_home_board + difference_num_of_points + difference_num_of_blots
+    return 10 * difference_num_checkers + 15 * difference_num_bar_checkers + 3 * difference_num_checkers_home_board + difference_num_of_points + difference_num_of_blots
 
 
 def find_best_move(made_moves):
@@ -74,7 +81,7 @@ def expectiminimax(game_board: Board, node_type, depth, maximizing_player, game_
                 reversed_moves = deepcopy(moves)
                 reversed_moves = dict(reversed(list(reversed_moves.items())))
                 for key, move in reversed_moves.items():
-                    undo_move(game_board, move)
+                    undo_move(game_board, move, get_player_figure(maximizing_player))
                 r = boards_same(game_board, board)
                 a = 3 + 5
                 i += 1
@@ -121,7 +128,7 @@ def expectiminimax(game_board: Board, node_type, depth, maximizing_player, game_
                 reversed_moves = deepcopy(moves)
                 reversed_moves = dict(reversed(list(reversed_moves.items())))
                 for key, move in reversed_moves.items():
-                    undo_move(game_board, move)
+                    undo_move(game_board, move, get_player_figure(maximizing_player))
                 r = boards_same(game_board, board)
                 a = 3 + 5
             result = weighted_result(made_moves, game_dice)

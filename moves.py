@@ -40,11 +40,12 @@ def do_move(checker, game_board, move):
         game_board.triangles[move[1]].append(checker)
 
 
-def undo_move(game_board, move):
+def undo_move(game_board, move, player_figure):
     checker = game_board.triangles[move[1]].pop()
     if move[2]:
-        bar_checker = game_board.bar.pop()
-        game_board.triangles[move[1]].append(bar_checker)
+        opponent_figure = get_opponent_figure(player_figure)
+        game_board.bar.remove(opponent_figure)
+        game_board.triangles[move[1]].append(opponent_figure)
     if move[0] == 'bar':
         game_board.bar.append(checker)
     else:
@@ -180,7 +181,7 @@ class Moves:
                                                 continue
                                 except ValueError:
                                     continue
-                    undo_move(game_board, move)
+                    undo_move(game_board, move, player_figure)
 
     def generate_moves(self, game_board: Board, dice: Dice, player_figure):
         if dice.die1 == dice.die2:
@@ -284,5 +285,5 @@ class Moves:
                                 continue
                 current_moves = dict(reversed(list(current_moves.items())))
                 for key, move in list(current_moves.items()):
-                    undo_move(game_board, move)
+                    undo_move(game_board, move, player_figure)
             self.moves.extend(new_moves)
