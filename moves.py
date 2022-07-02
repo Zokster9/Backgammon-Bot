@@ -32,7 +32,12 @@ def simulate_move(game_board, move, player_figure=None):
 
 
 def do_move(checker, game_board, move):
-    if move[2]:
+    if move[1] == 'bear':
+        if checker == Figures.white_figure():
+            game_board.num_of_white -= 1
+        else:
+            game_board.num_of_black -= 1
+    elif move[2]:
         bar_checker = game_board.triangles[move[1]].pop()
         game_board.bar.append(bar_checker)
         game_board.triangles[move[1]].append(checker)
@@ -41,15 +46,22 @@ def do_move(checker, game_board, move):
 
 
 def undo_move(game_board, move, player_figure):
-    checker = game_board.triangles[move[1]].pop()
-    if move[2]:
-        opponent_figure = get_opponent_figure(player_figure)
-        game_board.bar.remove(opponent_figure)
-        game_board.triangles[move[1]].append(opponent_figure)
-    if move[0] == 'bar':
-        game_board.bar.append(checker)
+    if move[1] == 'bear':
+        game_board.triangles[move[0]].append(player_figure)
+        if player_figure == Figures.white_figure():
+            game_board.num_of_white += 1
+        else:
+            game_board.num_of_black += 1
     else:
-        game_board.triangles[move[0]].append(checker)
+        checker = game_board.triangles[move[1]].pop()
+        if move[2]:
+            opponent_figure = get_opponent_figure(player_figure)
+            game_board.bar.remove(opponent_figure)
+            game_board.triangles[move[1]].append(opponent_figure)
+        if move[0] == 'bar':
+            game_board.bar.append(checker)
+        else:
+            game_board.triangles[move[0]].append(checker)
 
 
 def generate_bar_move(game_board, die, moves, player_figure):
@@ -87,6 +99,12 @@ def generate_first_move(game_board, die, moves, player_figure):
                     game_board.triangles[i].index(player_figure)
                     next_triangle = i + step * die
                     if next_triangle < 0 or next_triangle > 23:
+                        if player_figure == Figures.black_figure():
+                            if next_triangle > 23 and game_board.are_all_black_checkers_on_home_board():
+                                moves.append({die: [i, 'bear', False]})
+                        else:
+                            if next_triangle < 0 and game_board.are_all_white_checkers_on_home_board():
+                                moves.append({die: [i, 'bear', False]})
                         continue
                     if len(game_board.triangles[next_triangle]) == 0:
                         moves.append({die: [i, next_triangle, False]})  # i - source triangle, next_triangle - destination triangle, hit or not
@@ -163,6 +181,12 @@ class Moves:
                                     game_board.triangles[i].index(player_figure)
                                     next_triangle = i + step * die2
                                     if next_triangle < 0 or next_triangle > 23:
+                                        if player_figure == Figures.black_figure():
+                                            if next_triangle > 23 and game_board.are_all_black_checkers_on_home_board():
+                                                self.moves.append({die1: [move[0], move[1], move[2]], die2: [i, 'bear', False]})
+                                        else:
+                                            if next_triangle < 0 and game_board.are_all_white_checkers_on_home_board():
+                                                self.moves.append({die1: [move[0], move[1], move[2]], die2: [i, 'bear', False]})
                                         continue
                                     if len(game_board.triangles[next_triangle]) == 0:
                                         self.moves.append({die1: [move[0], move[1], move[2]], die2: [i, next_triangle, False]})
@@ -231,7 +255,7 @@ class Moves:
             if len(self.moves) == 0:
                 break
             else:
-                if len(self.moves) > size or len(self.moves[0].keys()) > size:
+                if len(self.moves) > size or len(self.moves[0].keys()) > self.equal_die_valid_counter:
                     self.equal_die_valid_counter += 1
                     size = len(self.moves)
                 else:
@@ -244,6 +268,7 @@ class Moves:
         if len(self.moves) == 0:
             generate_first_move(game_board, die, self.moves, player_figure)
         else:
+            old_moves = deepcopy(self.moves)
             new_moves = list()
             for moves in list(self.moves):
                 self.moves.remove(moves)
@@ -262,6 +287,14 @@ class Moves:
                                 game_board.triangles[i].index(player_figure)
                                 next_triangle = i + step * die
                                 if next_triangle < 0 or next_triangle > 23:
+                                    if player_figure == Figures.black_figure():
+                                        if next_triangle > 23 and game_board.are_all_black_checkers_on_home_board():
+                                            moves[die + self.equal_die_valid_counter] = [i, 'bear', False]
+                                            new_moves.append(deepcopy(moves))
+                                    else:
+                                        if next_triangle < 0 and game_board.are_all_white_checkers_on_home_board():
+                                            moves[die + self.equal_die_valid_counter] = [i, 'bear', False]
+                                            new_moves.append(deepcopy(moves))
                                     continue
                                 if len(game_board.triangles[next_triangle]) == 0:
                                     moves[die + self.equal_die_valid_counter] = [i, next_triangle, False]
@@ -286,4 +319,7 @@ class Moves:
                 current_moves = dict(reversed(list(current_moves.items())))
                 for key, move in list(current_moves.items()):
                     undo_move(game_board, move, player_figure)
-            self.moves.extend(new_moves)
+            if len(new_moves) != 0:
+                self.moves.extend(new_moves)
+            else:
+                self.moves.extend(old_moves)

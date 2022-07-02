@@ -26,10 +26,16 @@ def make_move(game_board: Board, moves, maximizing_player):
                 game_board.bar.remove(checker)
         else:
             checker = game_board.triangles[move[0]].pop()
-        if move[2]:
-            bar_checker = game_board.triangles[move[1]].pop()
-            game_board.bar.append(bar_checker)
-        game_board.triangles[move[1]].append(checker)
+        if move[1] == 'bear':
+            if checker == Figures.white_figure():
+                game_board.num_of_white -= 1
+            else:
+                game_board.num_of_black -= 1
+        else:
+            if move[2]:
+                bar_checker = game_board.triangles[move[1]].pop()
+                game_board.bar.append(bar_checker)
+            game_board.triangles[move[1]].append(checker)
 
 
 def weighted_result(made_moves, game_dice):
@@ -73,7 +79,6 @@ def expectiminimax(game_board: Board, node_type, depth, maximizing_player, game_
         if depth == 0:
             return heuristic_value(game_board)
         if first_time:
-            board = deepcopy(game_board)
             i = 0
             for moves in valid_moves.moves:
                 make_move(game_board, moves, maximizing_player)
@@ -82,8 +87,6 @@ def expectiminimax(game_board: Board, node_type, depth, maximizing_player, game_
                 reversed_moves = dict(reversed(list(reversed_moves.items())))
                 for key, move in reversed_moves.items():
                     undo_move(game_board, move, get_player_figure(maximizing_player))
-                r = boards_same(game_board, board)
-                a = 3 + 5
                 i += 1
             return find_best_move(made_moves)
         else:
@@ -118,7 +121,6 @@ def expectiminimax(game_board: Board, node_type, depth, maximizing_player, game_
             else:
                 return 100
         else:
-            board = deepcopy(game_board)
             for moves in valid_moves.moves:
                 make_move(game_board, moves, maximizing_player)
                 if maximizing_player:
@@ -129,7 +131,5 @@ def expectiminimax(game_board: Board, node_type, depth, maximizing_player, game_
                 reversed_moves = dict(reversed(list(reversed_moves.items())))
                 for key, move in reversed_moves.items():
                     undo_move(game_board, move, get_player_figure(maximizing_player))
-                r = boards_same(game_board, board)
-                a = 3 + 5
             result = weighted_result(made_moves, game_dice)
     return result

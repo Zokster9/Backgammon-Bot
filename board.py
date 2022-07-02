@@ -41,6 +41,12 @@ class Board:
                           triangle_17, triangle_18, triangle_19, triangle_20, triangle_21, triangle_22, triangle_23,
                           triangle_24]
 
+    def are_all_black_checkers_on_home_board(self):
+        return self.get_num_black_checkers_on_home_board() == self.num_of_black
+
+    def are_all_white_checkers_on_home_board(self):
+        return self.get_num_white_checkers_on_home_board() == self.num_of_white
+
     def get_num_black_checkers_on_home_board(self):
         num = 0
         for triangle in self.black_home_board:

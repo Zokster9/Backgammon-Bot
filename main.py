@@ -1,12 +1,11 @@
 from random import randint
+from timeit import default_timer as timer
 
-from expectiminimax import expectiminimax
 from board import Board, BoardDrawer
 from dice import Dice, Die, DiceDrawer
+from expectiminimax import expectiminimax
 from figures import Figures
 from moves import Moves
-from timeit import default_timer as timer
-import pprint
 
 
 def get_ordinal_for_num(num):
@@ -224,10 +223,16 @@ def move_checker(game_board, move, figure):
         checker = figure
     else:
         checker = game_board.triangles[move[0]].pop()
-    if move[2]:
-        bar_checker = game_board.triangles[move[1]].pop()
-        game_board.bar.append(bar_checker)
-    game_board.triangles[move[1]].append(checker)
+    if move[1] == 'bear':
+        if figure == Figures.white_figure():
+            game_board.num_of_white -= 1
+        else:
+            game_board.num_of_black -= 1
+    else:
+        if move[2]:
+            bar_checker = game_board.triangles[move[1]].pop()
+            game_board.bar.append(bar_checker)
+        game_board.triangles[move[1]].append(checker)
 
 
 def random_bot_makes_a_move(game_board: Board, valid_moves: Moves):
@@ -274,6 +279,8 @@ def game(game_board: Board, game_dice: Dice, player_goes_next):
         if len(moves.moves) > 0:
             if player_goes_next:
                 player_input(game_board, game_dice, moves)
+                if game_board.num_of_white == 0:
+                    game_over = True
                 player_goes_next = False
             else:
                 # random_bot_makes_a_move(game_board, moves)
@@ -281,6 +288,8 @@ def game(game_board: Board, game_dice: Dice, player_goes_next):
                 index = expectiminimax(game_board, 'MAX', 3, True, valid_moves=moves, first_time=True)
                 print(timer() - start_time)
                 expectiminimax_bot_makes_move(game_board, moves, index)
+                if game_board.num_of_black == 0:
+                    game_over = True
                 player_goes_next = True
         else:
             if player_goes_next:
@@ -290,6 +299,10 @@ def game(game_board: Board, game_dice: Dice, player_goes_next):
                 print('Bot has no valid moves. Bot must skip a turn!')
                 player_goes_next = True
         game_dice.roll_dice()
+    if game_board.num_of_white == 0:
+        print('YOU HAVE WON HOORAY!')
+    else:
+        print('BOT HAS WON ;(')
 
 
 if __name__ == '__main__':
