@@ -9,6 +9,8 @@ from moves import Moves
 
 expectiminimax_won = 0
 random_bot_won = 0
+turn_counter = 0
+total_time = 0
 
 
 def figures_on_bar(game_board: Board, player_figure):
@@ -73,7 +75,7 @@ def get_player_figure(random_bot_goes_first):
 
 
 def game(game_board: Board, game_dice: Dice, random_bot_goes_first):
-    global expectiminimax_won, random_bot_won
+    global expectiminimax_won, random_bot_won, turn_counter, total_time
     game_over = False
     while not game_over:
         moves = Moves()
@@ -85,11 +87,13 @@ def game(game_board: Board, game_dice: Dice, random_bot_goes_first):
                     game_over = True
                 random_bot_goes_first = False
             else:
+                turn_counter += 1
                 start_time = timer()
                 if game_dice.die1 == game_dice.die2:
                     index = expectiminimax(game_board, 'MAX', 1, True, valid_moves=moves, first_time=True)
                 else:
                     index = expectiminimax(game_board, 'MAX', 3, True, valid_moves=moves, first_time=True)
+                total_time += timer() - start_time
                 print(timer() - start_time)
                 expectiminimax_bot_makes_move(game_board, moves, index)
                 if game_board.num_of_black == 0:
@@ -110,9 +114,9 @@ def game(game_board: Board, game_dice: Dice, random_bot_goes_first):
 
 
 if __name__ == '__main__':
-    n = 10
+    n = 100
     for i in range(0, n):
-        print(i)
+        print(f'Game number: {i + 1}')
         random_bot_turn = False
         board = Board()
         dice = Dice(Die(), Die())
@@ -126,13 +130,16 @@ if __name__ == '__main__':
         game(board, dice, random_bot_turn)
     expectiminimax_win_percentage = round((expectiminimax_won / n) * 100, 2)
     random_bot_win_percentage = round((random_bot_won / n) * 100, 2)
+    average_turn_time = round(total_time / turn_counter, 2)
     print(f'Expectiminimax won {expectiminimax_won} times.')
     print(f'Random bot won {random_bot_won} times.')
     print(f'Expectiminimax won {expectiminimax_win_percentage} percent of games.')
     print(f'Random bot won {random_bot_win_percentage} percent of games.')
-    # f = open('results/againts_random_bot.txt', 'a')
-    # f.write(f'Expectiminimax won {expectiminimax_won} times.\n')
-    # f.write(f'Random bot won {random_bot_won} times.\n')
-    # f.write(f'Expectiminimax won {expectiminimax_win_percentage} percent of games.\n')
-    # f.write(f'Random bot won {random_bot_win_percentage} percent of games.\n')
-    # f.close()
+    print(f'Expectiminimax bot average turn time: {average_turn_time}')
+    f = open('results/againts_random_bot.txt', 'a')
+    f.write(f'Expectiminimax won {expectiminimax_won} times.\n')
+    f.write(f'Random bot won {random_bot_won} times.\n')
+    f.write(f'Expectiminimax won {expectiminimax_win_percentage} percent of games.\n')
+    f.write(f'Random bot won {random_bot_win_percentage} percent of games.\n')
+    f.write(f'Expectiminimax bot average turn time: {average_turn_time}\n')
+    f.close()

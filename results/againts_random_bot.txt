@@ -2,3 +2,8 @@ Expectiminimax won 99 times.
 Random bot won 1 times.
 Expectiminimax won 99.0 percent of games.
 Random bot won 1.0 percent of games.
+Expectiminimax won 90 times.
+Random bot won 10 times.
+Expectiminimax won 90.0 percent of games.
+Random bot won 10.0 percent of games.
+Expectiminimax bot average turn time: 1.51
