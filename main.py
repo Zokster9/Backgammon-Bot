@@ -283,9 +283,11 @@ def game(game_board: Board, game_dice: Dice, player_goes_next):
                     game_over = True
                 player_goes_next = False
             else:
-                # random_bot_makes_a_move(game_board, moves)
                 start_time = timer()
-                index = expectiminimax(game_board, 'MAX', 3, True, valid_moves=moves, first_time=True)
+                if game_dice.die1 == game_dice.die2:
+                    index = expectiminimax(game_board, 'MAX', 1, True, valid_moves=moves, first_time=True)
+                else:
+                    index = expectiminimax(game_board, 'MAX', 3, True, valid_moves=moves, first_time=True)
                 print(timer() - start_time)
                 expectiminimax_bot_makes_move(game_board, moves, index)
                 if game_board.num_of_black == 0:
@@ -299,6 +301,7 @@ def game(game_board: Board, game_dice: Dice, player_goes_next):
                 print('Bot has no valid moves. Bot must skip a turn!')
                 player_goes_next = True
         game_dice.roll_dice()
+    BoardDrawer.generate_table(game_board.triangles, game_board.bar)
     if game_board.num_of_white == 0:
         print('YOU HAVE WON HOORAY!')
     else:

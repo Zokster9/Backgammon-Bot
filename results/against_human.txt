@@ -1,0 +1,4 @@
+Expectiminimax won 7 times.
+Human won 3 times.
+Expectiminimax won 70.0 percent of games.
+Human won 30.0 percent of games.
