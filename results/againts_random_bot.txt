@@ -1,0 +1,4 @@
+Expectiminimax won 99 times.
+Random bot won 1 times.
+Expectiminimax won 99.0 percent of games.
+Random bot won 1.0 percent of games.

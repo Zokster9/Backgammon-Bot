@@ -240,11 +240,11 @@ class Moves:
             elif self.die2_valid and self.die1_valid:
                 if dice.die1 > dice.die2:
                     for move in list(self.moves):
-                        if move.keys()[0] != dice.die1:
+                        if list(move.keys())[0] != dice.die1:
                             self.moves.remove(move)
                 else:
                     for move in list(self.moves):
-                        if move.keys()[0] != dice.die2:
+                        if list(move.keys())[0] != dice.die2:
                             self.moves.remove(move)
         self.one_die_moves = list()
 
